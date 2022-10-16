@@ -33,6 +33,7 @@ struct FixedString {
         return newString;
     }
 
+
     static constexpr auto size() {
         return N;
     }
@@ -42,5 +43,30 @@ struct FixedString {
 
     CharT _data[N];
 };
+
+
+template<typename T>
+    requires std::is_integral_v<T>
+constexpr std::size_t integralLength(T val) {
+    std::size_t r{1U};
+    while (T{} != (val /= T{10})) r++;
+    return r;
+}
+
+template<typename T, T val>
+    requires std::is_integral_v<T>
+constexpr auto parseIntToFixedString() {
+    constexpr auto N = integralLength(val);
+    auto s = FixedString<char, N + 1>();
+    auto v = val;
+    for (auto i = 0; i < N; i++) {
+        auto n = v % T{10};
+        s._data[N - 1 - i] = '0' + n;
+        v /= T{10};
+    }
+    s._data[N] = '\0';
+    return s;
+}
+
 
 #endif//JREFLECT_FIXED_STRING_H

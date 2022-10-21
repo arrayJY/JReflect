@@ -68,5 +68,9 @@ constexpr auto parseIntToFixedString() {
     return s;
 }
 
+template<typename... Strings>
+constexpr auto concatStrings(Strings... strings) {
+    return (strings + ...);
+}
 
 #endif//JREFLECT_FIXED_STRING_H
